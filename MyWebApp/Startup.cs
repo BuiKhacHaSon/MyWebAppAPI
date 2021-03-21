@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DAL.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using DAL.Services;
 
 namespace MyWebApp
 {
@@ -32,6 +35,16 @@ namespace MyWebApp
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyWebApp", Version = "v1" });
             });
+            var test = Configuration.GetConnectionString("ConnectionString");
+             services.AddEntityFrameworkNpgsql().AddDbContext<DatabaseContext>((sp, opt) =>
+            opt.UseNpgsql(Configuration.GetConnectionString("ConnectionString"), ww =>
+            {
+                ww.MigrationsAssembly("MyWebApp");
+            }).UseInternalServiceProvider(sp));
+
+            services.AddScoped<MessageService, MessageService>();
+
+            services.AddMvcCore();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +67,7 @@ namespace MyWebApp
             {
                 endpoints.MapControllers();
             });
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyWebApp v1"));
         }
     }
 }
