@@ -12,15 +12,17 @@ namespace DAL.Data
         }
 
         public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Calculation> Calculations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Message>().HasData(new Message(){
+            modelBuilder.Entity<Message>().HasData(new Message()
+            {
                 Id = 1,
                 Name = "Son Dep Trai",
                 BodyMessage = "Ok it works ^^",
                 CreatedAt = DateTime.UtcNow
-            });   
+            });
         }
     }
 }

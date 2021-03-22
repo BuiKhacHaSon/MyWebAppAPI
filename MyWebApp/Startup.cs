@@ -49,7 +49,7 @@ namespace MyWebApp
             }).UseInternalServiceProvider(sp));
 
             services.AddScoped<MessageService, MessageService>();
-
+            services.AddScoped<CalculationService, CalculationService>();
             services.AddMvcCore();
         }
 
