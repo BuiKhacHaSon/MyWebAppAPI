@@ -3,13 +3,57 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DAL.Models;
 using DAL.Services;
+using Infrastructure.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using OrbintSoft.Yauaa.Analyzer;
 
 namespace MyWebApp.Controllers
 {
     [Route("mes")]
     public class MyWebAppController : Controller
     {
+        public string Agent
+        {
+            get
+            {
+                return HttpContext.Request.Headers["User-Agent"].ToString();
+            }
+        }
+
+        public string Platform
+        {
+            get
+            {
+                #pragma warning disable 618
+                var userAgent = HttpContext.Request.Headers["User-Agent"];
+                var ua = YauaaSingleton.Analyzer.Parse(userAgent);
+                return ua.GetValue(UserAgent.OPERATING_SYSTEM_NAME_VERSION);
+                #pragma warning restore 618
+            }
+        }
+        public string Browser
+        {
+            get
+            {   
+                #pragma warning disable 618
+                var userAgent = HttpContext.Request.Headers["User-Agent"];
+                var ua = YauaaSingleton.Analyzer.Parse(userAgent);
+                return ua.GetValue(UserAgent.AGENT_NAME_VERSION);
+                #pragma warning restore 618
+            }
+        }
+
+        public string Device
+        {
+            get
+            {
+                #pragma warning disable 618
+                var userAgent = HttpContext.Request.Headers["User-Agent"];
+                var ua = YauaaSingleton.Analyzer.Parse(userAgent);
+                return ua.GetValue(UserAgent.OPERATING_SYSTEM_CLASS);
+                #pragma warning restore 618
+            }
+        }
         protected MessageService messageService;
         public MyWebAppController(MessageService messageService)
         {
@@ -36,6 +80,10 @@ namespace MyWebApp.Controllers
         {
             try
             {
+                message.Agent = Agent;
+                message.Platform = Platform;
+                message.Browser = Browser;
+                message.Device = Device;
                 message.CreatedAt = DateTime.UtcNow;
                 await messageService.CreateMessageAsync(message);
                 return new OkResult();

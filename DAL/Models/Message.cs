@@ -17,7 +17,10 @@ namespace DAL.Models
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
         public bool IsRead { get; set; }
-
+        public string Agent { get; set; }
+        public string Platform { get; set; }
+        public string Browser { get; set; }
+        public string Device { get; set; }
         public Message() { }
 
     }
