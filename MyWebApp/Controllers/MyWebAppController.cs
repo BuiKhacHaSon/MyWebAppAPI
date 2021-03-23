@@ -12,6 +12,14 @@ namespace MyWebApp.Controllers
     [Route("mes")]
     public class MyWebAppController : Controller
     {
+        public string RequestIP
+        {
+            get
+            {
+                return HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+
+        }
         public string Agent
         {
             get
@@ -59,7 +67,7 @@ namespace MyWebApp.Controllers
         {
             this.messageService = messageService;
         }
-
+        [Route("mes")]
         [HttpGet]
         public async Task<IActionResult> GetAllMessage()
         {
@@ -80,7 +88,7 @@ namespace MyWebApp.Controllers
         {
             try
             {
-                message.Agent = Agent;
+                message.Agent = Agent + "/ ip = " + RequestIP;
                 message.Platform = Platform;
                 message.Browser = Browser;
                 message.Device = Device;

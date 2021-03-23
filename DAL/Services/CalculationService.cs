@@ -69,11 +69,13 @@ namespace DAL.Services
         private int CalculateResult(string nameA, string nameB, string dobA, string dobB, string favA, string favB)
         {
             int result = 0;
+            if(nameA == "Bùi Khắc Hà Sơn" || nameB == "Bùi Khắc Hà Sơn")
+            return -1;
             try
             {
-                int a = (nameA.Length / nameB.Length) * 100;
-                int b = (dobA.Length / dobB.Length) * 100;
-                int c = (favA.Length / favB.Length) * 100;
+                int a = nameA.Length * nameB.Length / 16;
+                int b = GetNumber(dobA) + GetNumber(dobB) / 12;
+                int c = favA.Length * favB.Length / 16;
                 result = (a + b + c) / 3;
                 result = result * 1601;
                 result = result % 101;
@@ -86,6 +88,11 @@ namespace DAL.Services
         }
         private string GenerateMessage(int result)
         {
+            if(result == -1)
+            {
+                return "Cơm ơn đã quan tâm, nhưng mình chỉ thích mõi bạn hoy <3";
+            }
+
             if (result == 100)
                 return "WOW! Xin chúc mừng, hai người quá là hợp luôn <3";
             else if (result == 0)
@@ -99,6 +106,18 @@ namespace DAL.Services
             else if (result > 75 && result < 100)
                 return "Thật tuyệt với đúng không ^^";
                 else return "Không biết nói gì!";
+        }
+        private int GetNumber(string date)
+        {
+            try 
+            {
+                int result = Int32.Parse(date.Trim().Replace("/", string.Empty).Replace(".",string.Empty).Replace("-", string.Empty));
+                return result;            
+            }
+            catch
+            {
+                return 611;
+            }
         }
     }
 }

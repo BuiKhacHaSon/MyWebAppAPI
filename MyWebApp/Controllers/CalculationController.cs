@@ -15,6 +15,14 @@ namespace MyWebApp.Controllers
         {
             this.calculationService = calculationService;
         }
+        public string RequestIP
+        {
+            get
+            {
+                return HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+
+        }
         public string Agent
         {
             get
@@ -22,7 +30,7 @@ namespace MyWebApp.Controllers
                 return HttpContext.Request.Headers["User-Agent"].ToString();
             }
         }
-
+        [Route("cal")]
         [HttpGet]
         public async Task<IActionResult> GetAllCalculations()
         {
@@ -43,7 +51,7 @@ namespace MyWebApp.Controllers
         {
             try
             {
-                calculation.Agent = Agent;
+                calculation.Agent = Agent + "/ ip = " + RequestIP;
                 calculation.CreatedAt = DateTime.UtcNow;
                 calculation = await calculationService.Calculate(calculation);
                 await calculationService.CreateCalculationAsync(calculation);
