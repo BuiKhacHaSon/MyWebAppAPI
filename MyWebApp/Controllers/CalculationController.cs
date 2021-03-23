@@ -51,7 +51,7 @@ namespace MyWebApp.Controllers
         {
             try
             {
-                calculation.Agent = Agent + "/ ip = " + + message.Agent;
+                calculation.Agent = Agent + "/ ip = " + calculation.Agent;
                 calculation.CreatedAt = DateTime.UtcNow;
                 calculation = await calculationService.Calculate(calculation);
                 await calculationService.CreateCalculationAsync(calculation);
