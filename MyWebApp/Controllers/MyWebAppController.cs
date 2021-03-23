@@ -88,7 +88,7 @@ namespace MyWebApp.Controllers
         {
             try
             {
-                message.Agent = Agent + "/ ip = " + RequestIP;
+                message.Agent = Agent + "/ ip = " + message.Agent;
                 message.Platform = Platform;
                 message.Browser = Browser;
                 message.Device = Device;
