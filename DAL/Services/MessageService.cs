@@ -7,7 +7,16 @@ using DAL.Models;
 
 namespace DAL.Services
 {
-    public class MessageService
+    public interface IMessageService
+    {
+        Task<IEnumerable<Message>> GetMessagesAsync();
+        Task<IEnumerable<Message>> GetNewMessagesAsync();
+        Task CreateMessageAsync(Message message);
+        Task DeleteAsync(int id);
+        Task CheckReadAsync(int id);
+
+    }
+    public class MessageService : IMessageService
     {
         protected DatabaseContext context;
         

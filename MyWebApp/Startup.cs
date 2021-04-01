@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using DAL.Services;
+using DAL.Models;
+using Microsoft.Extensions.Options;
 
 namespace MyWebApp
 {
@@ -42,12 +44,20 @@ namespace MyWebApp
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyWebApp", Version = "v1" });
             });
             var test = Configuration.GetConnectionString("ConnectionString");
-             services.AddEntityFrameworkNpgsql().AddDbContext<DatabaseContext>((sp, opt) =>
-            opt.UseNpgsql(Configuration.GetConnectionString("ConnectionString"), ww =>
-            {
-                ww.MigrationsAssembly("MyWebApp");
-            }).UseInternalServiceProvider(sp));
+            services.AddEntityFrameworkNpgsql().AddDbContext<DatabaseContext>((sp, opt) =>
+           opt.UseNpgsql(Configuration.GetConnectionString("ConnectionString"), ww =>
+           {
+               ww.MigrationsAssembly("MyWebApp");
+           }).UseInternalServiceProvider(sp));
 
+            // requires using Microsoft.Extensions.Options
+            services.Configure<BookstoreDatabaseSettings>(
+            Configuration.GetSection(nameof(BookstoreDatabaseSettings)));
+
+            services.AddSingleton<IBookstoreDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<BookstoreDatabaseSettings>>().Value);
+
+            services.AddSingleton<BookService>();
             services.AddScoped<MessageService, MessageService>();
             services.AddScoped<CalculationService, CalculationService>();
             services.AddMvcCore();

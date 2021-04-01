@@ -62,8 +62,8 @@ namespace MyWebApp.Controllers
                 #pragma warning restore 618
             }
         }
-        protected MessageService messageService;
-        public MyWebAppController(MessageService messageService)
+        protected IMessageService messageService;
+        public MyWebAppController(IMessageService messageService)
         {
             this.messageService = messageService;
         }
