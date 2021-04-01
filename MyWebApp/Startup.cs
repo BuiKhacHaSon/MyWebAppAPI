@@ -58,7 +58,7 @@ namespace MyWebApp
                 sp.GetRequiredService<IOptions<BookstoreDatabaseSettings>>().Value);
 
             services.AddSingleton<BookService>();
-            services.AddScoped<IMessageService, IMessageService>();
+            services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<CalculationService, CalculationService>();
             services.AddMvcCore();
         }
