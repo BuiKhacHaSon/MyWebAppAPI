@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using DAL.Models;
 using DAL.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace MyWebApp.Controllers
 {
@@ -10,10 +12,12 @@ namespace MyWebApp.Controllers
     public class BooksController : Controller
     {
         private readonly BookService _bookService;
+        protected ILogger logger;
 
-        public BooksController(BookService bookService)
+        public BooksController(BookService bookService, ILogger<BooksController> logger)
         {
             _bookService = bookService;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -29,16 +33,25 @@ namespace MyWebApp.Controllers
             {
                 return NotFound();
             }
-
+            this.logger.LogTrace("Get books success!", new {book});
+            
             return book;
         }
 
         [HttpPost]
         public ActionResult<Book> Create(Book book)
         {
+            try
+            {
             _bookService.Create(book);
 
             return CreatedAtRoute("GetBook", new { id = book.Id.ToString() }, book);
+            }
+            catch(Exception ex)
+            {
+                this.logger.LogError(ex,"Can Not Post Book");
+                return new BadRequestResult();
+            }
         }
 
         [HttpPut("{id:length(24)}")]

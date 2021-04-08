@@ -50,6 +50,9 @@ namespace MyWebApp
                ww.MigrationsAssembly("MyWebApp");
            }).UseInternalServiceProvider(sp));
 
+            //Nlog
+            NLog.GlobalDiagnosticsContext.Set("connectionString", Configuration.GetConnectionString("LoggingConn"));
+
             // requires using Microsoft.Extensions.Options
             services.Configure<BookstoreDatabaseSettings>(
             Configuration.GetSection(nameof(BookstoreDatabaseSettings)));
